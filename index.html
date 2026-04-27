@@ -1,0 +1,424 @@
+Segue uma página HTML/CSS/JavaScript completa e funcional sobre problemas estruturais e climáticos no agronegócio.
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>AgroResiliente | Problemas Climáticos e Estruturais no Agro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, 'Segoe UI', 'Poppins', 'Roboto', sans-serif;
+            background: linear-gradient(145deg, #eaf7e6 0%, #d4e9c7 100%);
+            color: #1e2f1c;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+
+        /* CABEÇALHO */
+        header {
+            background: #0f3b2c;
+            background-image: radial-gradient(circle at 10% 30%, #1a5a44, #0a2a1f);
+            color: #f8f9e6;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+            border-bottom: 5px solid #f5b342;
+        }
+
+        h1 {
+            font-size: 2.3rem;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .sub {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* CONTAINER PRINCIPAL */
+        .container {
+            max-width: 1300px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* CARDS INTRO */
+        .intro-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            flex: 1;
+            min-width: 180px;
+            border-radius: 2rem;
+            padding: 1.5rem 0.5rem;
+            text-align: center;
+            box-shadow: 0 15px 25px -12px rgba(0,0,0,0.15);
+            transition: all 0.2s ease;
+            border-bottom: 4px solid #f5b342;
+        }
+
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #c25100;
+        }
+        .stat-label {
+            font-weight: 600;
+            color: #2b5e3b;
+        }
+
+        /* SEÇÃO DUPLA */
+        .problemas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .card-problema {
+            background: rgba(255,255,240,0.97);
+            border-radius: 2rem;
+            padding: 1.5rem 1.8rem;
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.1);
+            backdrop-filter: blur(2px);
+            transition: all 0.25s;
+            border-left: 8px solid;
+        }
+
+        .card-problema h2 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .climatico { border-left-color: #2c7da0; background: #fefce8; }
+        .estrutural { border-left-color: #e67e22; background: #fffbf0; }
+
+        .lista-problemas {
+            list-style: none;
+        }
+        .lista-problemas li {
+            margin-bottom: 1.2rem;
+            padding-left: 1.8rem;
+            position: relative;
+            font-weight: 500;
+        }
+        .lista-problemas li::before {
+            content: "⚠️";
+            position: absolute;
+            left: 0;
+            top: -1px;
+            font-size: 1.1rem;
+        }
+        .badge-impacto {
+            background: #da3e2f20;
+            color: #a12216;
+            border-radius: 40px;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        /* SIMULADOR INTERATIVO (JS) */
+        .simulador {
+            background: #ffffffdd;
+            backdrop-filter: blur(4px);
+            border-radius: 2rem;
+            padding: 2rem;
+            margin: 2rem 0 2.5rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border: 1px solid #cfe5bf;
+        }
+
+        .simulador h3 {
+            font-size: 1.7rem;
+            color: #1f543d;
+            margin-bottom: 1rem;
+        }
+
+        .slider-group {
+            margin: 1.2rem 0;
+        }
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 6px;
+        }
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 10px;
+            background: #cbd5c0;
+        }
+        .result-box {
+            background: #1a3f31;
+            color: #f9e7b3;
+            padding: 1.2rem;
+            border-radius: 1.5rem;
+            margin-top: 1.2rem;
+            font-weight: 500;
+        }
+        .highlight {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: #ffbc6e;
+        }
+
+        /* GRÁFICO DINÂMICO (canvas) */
+        .grafico-container {
+            background: white;
+            border-radius: 1.8rem;
+            padding: 1rem;
+            margin: 2rem 0;
+            text-align: center;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.05);
+        }
+        canvas {
+            max-width: 100%;
+            height: auto;
+            background: #fefaf0;
+            border-radius: 1.5rem;
+        }
+
+        /* FOOTER / fontes */
+        footer {
+            background: #0f2a1d;
+            color: #cddfbf;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            font-size: 0.85rem;
+            border-top-left-radius: 2rem;
+            border-top-right-radius: 2rem;
+        }
+        button {
+            background: #f5b342;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #e09d2c;
+            transform: scale(1.02);
+        }
+        @media (max-width: 680px) {
+            h1 { font-size: 1.6rem; }
+            .card-problema h2 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>
+        <span>🌾🚜</span> Desafios do Agro Brasileiro <span>🌦️🏗️</span>
+    </h1>
+    <div class="sub">Problemas climáticos e gargalos estruturais: impactos, dados e simulações interativas</div>
+</header>
+
+<div class="container">
+    <!-- Cards de estatísticas resumidas -->
+    <div class="intro-stats">
+        <div class="stat-card"><div class="stat-number">~R$ 23 Bi</div><div class="stat-label">perdas anuais por seca/geada</div></div>
+        <div class="stat-card"><div class="stat-number">80 Mi t</div><div class="stat-label">déficit de armazenagem</div></div>
+        <div class="stat-card"><div class="stat-number">64%</div><div class="stat-label">estradas vicinais em condições ruins</div></div>
+        <div class="stat-card"><div class="stat-number">+2,5°C</div><div class="stat-label">projeção de aquecimento até 2050</div></div>
+    </div>
+
+    <!-- GRID: problemas CLIMÁTICOS x ESTRUTURAIS -->
+    <div class="problemas-grid">
+        <div class="card-problema climatico">
+            <h2>🌪️🌡️ Problemas Climáticos</h2>
+            <ul class="lista-problemas">
+                <li><strong>Estiagens severas</strong> – no Matopiba e Centro-Oeste, quebra de safra de soja e milho <span class="badge-impacto">-30% prod.</span></li>
+                <li><strong>Geadas atípicas</strong> – destruição de lavouras de café, cana e hortifrúti no Sul/MG</li>
+                <li><strong>Chuvas irregulares</strong> – plantio e colheita desorganizados, aumento de fungos</li>
+                <li><strong>Ondas de calor extremo</strong> – abortamento de flores e grãos, estresse térmico animal</li>
+                <li><strong>Eventos extremos (vendavais/granizo)</strong> – perda total em áreas irrigadas e estruturas</li>
+            </ul>
+            <p style="margin-top: 1rem; font-style: italic; font-size: 0.85rem;">📌 Fonte: Embrapa / CEPEA - safras 2022-2025</p>
+        </div>
+
+        <div class="card-problema estrutural">
+            <h2>🏚️🚧 Problemas Estruturais</h2>
+            <ul class="lista-problemas">
+                <li><strong>Armazenagem insuficiente</strong> – déficit de 80 milhões de toneladas; perdas pós-colheita.</li>
+                <li><strong>Logística e transporte</strong> – dependência de rodovias precárias, encarecimento do frete.</li>
+                <li><strong>Falta de seguro rural acessível</strong> – apenas 18% da área plantada segurada.</li>
+                <li><strong>Infraestrutura hídrica obsoleta</strong> – poucos sistemas de reservação e irrigação eficiente.</li>
+                <li><strong>Baixo zoneamento agrícola dinâmico</strong> – defasagem frente às mudanças climáticas.</li>
+            </ul>
+            <p style="margin-top: 1rem; font-style: italic; font-size: 0.85rem;">📌 Dados: CONAB / CNA / Atlas do Agro</p>
+        </div>
+    </div>
+
+    <!-- SIMULADOR INTERATIVO (perda de produtividade) -->
+    <div class="simulador">
+        <h3>📉 Simulador de Risco Agroclimático + Estrutural</h3>
+        <p>Altere os indicadores abaixo para estimar a <strong>perda potencial de produtividade</strong> em uma propriedade típica de grãos.</p>
+        
+        <div class="slider-group">
+            <label>🚱 Severidade da seca ou estiagem: <span id="secaVal">50</span>%</label>
+            <input type="range" id="secaSlider" min="0" max="100" value="52">
+        </div>
+        <div class="slider-group">
+            <label>🧊 Risco de geada/evento extremo: <span id="geadaVal">30</span>%</label>
+            <input type="range" id="geadaSlider" min="0" max="100" value="30">
+        </div>
+        <div class="slider-group">
+            <label>🏭 Gargalo estrutural (armazenagem+logística): <span id="estrutVal">45</span>%</label>
+            <input type="range" id="estrutSlider" min="0" max="100" value="45">
+        </div>
+        <div class="result-box" id="resultBox">
+            🌾 <strong>Impacto estimado na produtividade:</strong> <span class="highlight" id="perdaTotal">0</span>% de perda média<br>
+            ⚠️ Risco classificado: <strong id="riscoClass">Médio</strong><br>
+            💡 <span id="sugestao">Invista em irrigação de precisão e melhore o armazenamento.</span>
+        </div>
+    </div>
+
+    <!-- GRÁFICO INTERATIVO COM Chart.js (JS nativo) -->
+    <div class="grafico-container">
+        <h3>📊 Comparação: Perdas por fator (média nacional)</h3>
+        <canvas id="graficoPerdas" width="500" height="280" style="max-width:100%; height:auto; background:white; border-radius:1rem;"></canvas>
+        <p style="margin-top: 10px; font-size: 0.8rem;">*Dados dinâmicos – atualize os sliders e veja o gráfico mudar!</p>
+    </div>
+
+    <div style="background: #e1eec3; border-radius: 1.5rem; padding: 1rem 1.5rem; margin: 1rem 0;">
+        <p>✅ <strong>Soluções estruturais + adaptação climática:</strong> Investimento em silos comunitários, agricultura de precisão, reflorestamento de matas ciliares, seguro rural paramétrico e rodovias resilientes.</p>
+    </div>
+</div>
+
+<footer>
+    🌱 AgroResiliente 2025 – Dados baseados em relatórios da CONAB, IPCC e EMBRAPA. Simulador ilustrativo para conscientização sobre riscos climáticos e estruturais no agronegócio. <br>
+    🔄 Página interativa | Projeto HTML/CSS/JS 
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    (function() {
+        // elementos do DOM
+        const secaSlider = document.getElementById('secaSlider');
+        const geadaSlider = document.getElementById('geadaSlider');
+        const estrutSlider = document.getElementById('estrutSlider');
+        const secaVal = document.getElementById('secaVal');
+        const geadaVal = document.getElementById('geadaVal');
+        const estrutVal = document.getElementById('estrutVal');
+        const perdaTotalSpan = document.getElementById('perdaTotal');
+        const riscoClassSpan = document.getElementById('riscoClass');
+        const sugestaoSpan = document.getElementById('sugestao');
+
+        // gráfico
+        let perdasChart;
+        const ctx = document.getElementById('graficoPerdas').getContext('2d');
+
+        function calcularPerdas(seca, geada, estrutural) {
+            // modelo: perda climática combina seca + geada mas com interação
+            let perdaClima = (seca * 0.6) + (geada * 0.4);
+            if(perdaClima > 85) perdaClima = 85;
+            let perdaEstruturalAjust = estrutural * 0.7;
+            // perda total não pode ultrapassar 95%
+            let total = (perdaClima * 0.65) + (perdaEstruturalAjust * 0.35);
+            total = Math.min(95, Math.max(0, total));
+            return { perdaClima: Math.round(perdaClima), perdaEstrut: Math.round(perdaEstruturalAjust), total: Math.round(total) };
+        }
+
+        function classificarRisco(total) {
+            if(total < 20) return { risco: "Baixo", sugestao: "Monitoramento básico, colheita com boas margens." };
+            if(total < 45) return { risco: "Médio", sugestao: "Considere seguro rural e rotação de culturas." };
+            if(total < 70) return { risco: "Alto", sugestao: "Invista em armazenagem e sistemas de irrigação emergencial." };
+            return { risco: "Crítico", sugestao: "Urgente: plano de adaptação climática + estrutura de escoamento." };
+        }
+
+        function atualizarTudo() {
+            let seca = parseFloat(secaSlider.value);
+            let geada = parseFloat(geadaSlider.value);
+            let estrutural = parseFloat(estrutSlider.value);
+
+            secaVal.innerText = seca;
+            geadaVal.innerText = geada;
+            estrutVal.innerText = estrutural;
+
+            const { perdaClima, perdaEstrut, total } = calcularPerdas(seca, geada, estrutural);
+            perdaTotalSpan.innerText = total;
+
+            const { risco, sugestao } = classificarRisco(total);
+            riscoClassSpan.innerText = risco;
+            sugestaoSpan.innerText = sugestao;
+
+            // atualizar gráfico com dados novos (perdas climáticas, estruturais)
+            if(perdasChart) {
+                perdasChart.data.datasets[0].data = [perdaClima, perdaEstrut, total];
+                perdasChart.update();
+            }
+        }
+
+        // criar gráfico inicial
+        function initChart() {
+            perdasChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Perdas Climáticas (%)', 'Perdas Estruturais (%)', 'Perda Total Estimada (%)'],
+                    datasets: [{
+                        label: 'Porcentagem de impacto',
+                        data: [35, 28, 48], // placeholder
+                        backgroundColor: ['#2c7da0', '#e67e22', '#b6461a'],
+                        borderRadius: 10,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: { display: true, text: 'Porcentagem de perda (%)' }
+                        }
+                    },
+                    plugins: {
+                        tooltip: { callbacks: { label: (ctx) => `${ctx.raw}% de impacto na produção` } }
+                    }
+                }
+            });
+            // atualiza valores iniciais
+            atualizarTudo();
+        }
+
+        // eventos
+        secaSlider.addEventListener('input', atualizarTudo);
+        geadaSlider.addEventListener('input', atualizarTudo);
+        estrutSlider.addEventListener('input', atualizarTudo);
+
+        initChart();
+    })();
+</script>
+</body>
+</html>
